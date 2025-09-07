@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAMS Asset Entry Form - Complete Version</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .form-container {
+            padding: 30px;
+        }
+        
+        .asset-type-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .asset-type-btn {
+            padding: 12px 20px;
+            border: 2px solid #5e72e4;
+            background: white;
+            color: #5e72e4;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .asset-type-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(94, 114, 228, 0.3);
+        }
+        
+        .asset-type-btn.active {
+            background: #5e72e4;
+            color: white;
+        }
+        
+        .form-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .field-group {
+            margin-bottom: 20px;
+        }
+        
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .field-description {
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+            line-height: 1.4;
+            font-style: italic;
+        }
+        
+        input[type="text"],
+        input[type="date"],
+        input[type="url"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #5e72e4;
+            box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .section-title {
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            color: #5e72e4;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(94, 114, 228, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        .btn-secondary:hover {
+            background: #e8e8e8;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #43a047 0%, #66bb6a 100%);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(67, 160, 71, 0.3);
+        }
+        
+        .output-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .output-section.active {
+            display: block;
+        }
+        
+        .output-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .output-data {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .copy-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #5e72e4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .copy-btn:hover {
+            background: #4c62d0;
+        }
+        
+        .required {
+            color: #e74c3c;
+        }
+        
+        .char-counter {
+            font-size: 11px;
+            color: #888;
+            text-align: right;
+            margin-top: 2px;
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        
+        select[readonly] {
+            background-color: #f5f5f5;
+            pointer-events: none;
+        }
+        
+        .asset-category-label {
+            grid-column: 1 / -1;
+            font-size: 12px;
+            font-weight: bold;
+            color: #666;
+            margin: 10px 0 5px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Special styles for textbook-related fields */
+        .textbook-fields {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .textbook-fields .field-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>DAMS Asset Entry Form - Complete Version</h1>
+            <div class="subtitle">Comprehensive data entry for all DAMS asset types (Columns E-J, N-AK)</div>
+        </div>
+        
+        <div class="form-container">
+            <div class="asset-type-selector">
+                <div class="asset-category-label">Media Assets</div>
+                <button class="asset-type-btn active" onclick="switchAssetType('image')">Image</button>
+                <button class="asset-type-btn" onclick="switchAssetType('videolink')">Video Link</button>
+                <button class="asset-type-btn" onclick="switchAssetType('audiolink')">Audio Link</button>
+                
+                <div class="asset-category-label">Text Assets</div>
+                <button class="asset-type-btn" onclick="switchAssetType('textfile')">Text File</button>
+                <button class="asset-type-btn" onclick="switchAssetType('textlink')">Text Link</button>
+                
+                <div class="asset-category-label">Textbook Assets</div>
+                <button class="asset-type-btn" onclick="switchAssetType('textbook')">Textbook</button>
+                <button class="asset-type-btn" onclick="switchAssetType('chapter')">Chapter</button>
+                <button class="asset-type-btn" onclick="switchAssetType('page')">Page</button>
+            </div>
+
+            <!-- Common form template will be dynamically populated -->
+            <div id="assetForm" class="form-section active">
+                <!-- Form content will be dynamically generated based on asset type -->
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="clearForm()">Clear Form</button>
+                <button class="btn btn-primary" onclick="validateAndSave()">Validate & Save Entry</button>
+                <button class="btn btn-success" onclick="exportData()">Export to Clipboard</button>
+                <button class="btn btn-primary" onclick="showPowerShellScript()">Generate PowerShell Script</button>
+            </div>
+
+            <div id="outputSection" class="output-section">
+                <h3>Spreadsheet Row Data (Tab-Separated for Excel)</h3>
+                <div id="outputData" class="output-data"></div>
+                <button class="copy-btn" onclick="copyToClipboard()">Copy to Clipboard</button>
+                <div style="margin-top: 15px; padding: 15px; background: #e3f2fd; border-left: 4px solid #2196F3; border-radius: 4px;">
+                    <strong>Direct Excel Export Instructions:</strong><br>
+                    <small style="color: #555;">
+                        1. For direct Excel writing, save this page and open it in Internet Explorer or Edge with ActiveX enabled<br>
+                        2. Or use the PowerShell script method below<br>
+                        3. Otherwise, use 'Copy to Clipboard' and paste manually into Excel
+                    </small>
+                </div>
+                <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                    Note: This data is formatted to paste directly into columns E-J and N-AK of your spreadsheet.
+                </div>
+            </div>
+            
+            <div id="powershellSection" class="output-section" style="display: none;">
+                <h3>PowerShell Script for Direct Excel Export</h3>
+                <div style="margin-bottom: 10px; font-size: 14px; color: #666;">
+                    Save the script below as 'export-to-excel.ps1' and run it in PowerShell:
+                </div>
+                <div id="powershellScript" class="output-data"></div>
+                <button class="copy-btn" onclick="copyPowerShellScript()">Copy PowerShell Script</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentAssetType = 'image';
+        let savedEntries = [];
+        
+        // Asset type configurations
+        const assetConfigs = {
+            'image': {
+                title: 'Image Asset Metadata',
+                assetType: 'Image',
+                types: ['Photograph', 'Illustration', 'Diagram', 'Chart', 'Graph', 'Map', 'Screenshot', 'Infographic', 'Logo', 'Icon', 'Artwork', 'Other'],
+                hasAVSupport: false,
+                requiresResourceUrl: false,
+                hasClosedCaptioning: false,
+                requiresAltText: true
+            },
+            'videolink': {
+                title: 'Video Link Asset Metadata',
+                assetType: 'Video Link',
+                types: ['Educational Video', 'Tutorial', 'Lecture', 'Documentary', 'Animation', 'Screencast', 'Interview', 'Webinar', 'Demonstration', 'Other'],
+                hasAVSupport: true,
+                requiresResourceUrl: true,
+                hasClosedCaptioning: true,
+                requiresAltText: false
+            },
+            'audiolink': {
+                title: 'Audio Link Asset Metadata',
+                assetType: 'Audio Link',
+                types: ['Podcast', 'Lecture Recording', 'Interview', 'Music', 'Narration', 'Audio Book', 'Sound Effect', 'Other'],
+                hasAVSupport: true,
+                requiresResourceUrl: true,
+                hasClosedCaptioning: false,
+                requiresAltText: false,
+                hasTranscript: true
+            },
+            'textfile': {
+                title: 'Text File Asset Metadata',
+                assetType: 'Text File',
+                types: ['PDF', 'Word Document', 'Plain Text', 'RTF', 'Markdown', 'Other'],
+                hasAVSupport: false,
+                requiresResourceUrl: false,
+                hasClosedCaptioning: false,
+                requiresAltText: false
+            },
+            'textlink': {
+                title: 'Text Link Asset Metadata',
+                assetType: 'Text Link',
+                types: ['Article', 'Blog Post', 'Research Paper', 'Documentation', 'Web Page', 'Other'],
+                hasAVSupport: false,
+                requiresResourceUrl: true,
+                hasClosedCaptioning: false,
+                requiresAltText: false
+            },
+            'textbook': {
+                title: 'Textbook Asset Metadata',
+                assetType: 'Textbook',
+                types: ['Digital Textbook', 'Physical Textbook', 'E-Book', 'Reference Book', 'Other'],
+                hasAVSupport: false,
+                requiresResourceUrl: false,
+                hasClosedCaptioning: false,
+                requiresAltText: false,
+                hasTextbookFields: true
+            },
+            'chapter': {
+                title: 'Chapter Asset Metadata',
+                assetType: 'Chapter',
+                types: ['Textbook Chapter', 'E-Book Chapter', 'Reference Chapter', 'Other'],
+                hasAVSupport: false,
+                requiresResourceUrl: false,
+                hasClosedCaptioning: false,
+                requiresAltText: false,
+                hasTextbookFields: true
+            },
+            'page': {
+                title: 'Page Asset Metadata',
+                assetType: 'Page',
+                types: ['Textbook Page', 'Reference Page', 'Single Page', 'Page Range', 'Other'],
+                hasAVSupport: false,
+                requiresResourceUrl: false,
+                hasClosedCaptioning: false,
+                requiresAltText: false,
+                hasTextbookFields: true
+            }
+        };
+
+        function generateFormHTML(config) {
+            let html = `
+                <h2 style="text-align: center; color: #333; margin-bottom: 30px;">${config.title}</h2>
+                
+                <div class="section-title">Basic Asset Information (Columns E-J)</div>
+                
+                <!-- Column E: ASSET TYPE -->
+                <div class="field-group">
+                    <label>ASSET TYPE (Column E) <span class="required">*</span></label>
+                    <select id="assetType" required readonly style="background: #f5f5f5;">
+                        <option value="${config.assetType}" selected>${config.assetType}</option>
+                    </select>
+                    <div class="field-description">The general categories of DAMS Asset Types</div>
+                </div>
+                
+                <!-- Column F: TYPE -->
+                <div class="field-group">
+                    <label>TYPE (Column F) <span class="required">*</span></label>
+                    <select id="type" required>
+                        <option value="">Select Type</option>`;
+            
+            config.types.forEach(type => {
+                html += `<option value="${type}">${type}</option>`;
+            });
+            
+            html += `
+                    </select>
+                    <div class="field-description">The more specific category of the ASSET TYPE</div>
+                </div>`;
+            
+            // Column G: AVSUPPORTFILE TYPE (only for video/audio)
+            if (config.hasAVSupport) {
+                html += `
+                <!-- Column G: AVSUPPORTFILE TYPE -->
+                <div class="field-group">
+                    <label>AVSUPPORTFILE TYPE (Column G)</label>
+                    <select id="avsupportfileType">
+                        <option value="">Select if applicable</option>
+                        <option value="Transcript">Transcript</option>
+                        <option value="Closed Caption">Closed Caption</option>
+                        <option value="Subtitle">Subtitle</option>
+                        <option value="Audio Description">Audio Description</option>
+                    </select>
+                    <div class="field-description">The general category of the AV SUPPORT FILE</div>
+                </div>`;
+            }
+            
+            html += `
+                <!-- Column H: FILE NAME -->
+                <div class="field-group">
+                    <label>FILE NAME (Column H) <span class="required">*</span></label>
+                    <input type="text" id="fileName" placeholder="example1.${getFileExtension(config.assetType)}" required 
+                           pattern="^[a-zA-Z0-9_\\-]+\\.[a-zA-Z0-9]+$" 
+                           oninput="updateFileNameWithoutExt()">
+                    <div class="field-description">
+                        File name with extension (e.g., example1.${getFileExtension(config.assetType)})<br>
+                        • No spaces or special characters (!, @, #, $, %, ^, &, /, etc.)<br>
+                        • Hyphens and underscores are OK
+                    </div>
+                </div>
+                
+                <!-- Column I: FILE NAME WITHOUT FILE EXTENSION -->
+                <div class="field-group">
+                    <label>FILE NAME WITHOUT FILE EXTENSION (Column I)</label>
+                    <input type="text" id="fileNameNoExt" readonly style="background: #f5f5f5;">
+                    <div class="field-description">Auto-populated based on FILE NAME</div>
+                </div>
+                
+                <!-- Column J: TITLE -->
+                <div class="field-group">
+                    <label>TITLE (Column J) <span class="required">*</span></label>
+                    <input type="text" id="title" placeholder="Enter unique title in title case" required>
+                    <div class="field-description">
+                        The name of the asset (must be unique)<br>
+                        • Use title case (APA rules for book titles)<br>
+                        • No length requirement
+                    </div>
+                </div>`;
+            
+            // Add textbook-specific fields for K-M columns (normally skipped but needed for textbook assets)
+            if (config.hasTextbookFields) {
+                html += `
+                <div class="textbook-fields">
+                    <div class="section-title">Textbook Information (Columns K-M)</div>
+                    
+                    <!-- Column K: Chapter #: Name of Chapter -->
+                    <div class="field-group">
+                        <label>Chapter #: Name of Chapter (Column K)</label>
+                        <input type="text" id="chapterInfo" placeholder="e.g., Chapter 5: Database Normalization">
+                        <div class="field-description">Chapter number and name (if applicable)</div>
+                    </div>
+                    
+                    <!-- Column L: Page #, Subtitle -->
+                    <div class="field-group">
+                        <label>Page #, Subtitle (Column L)</label>
+                        <input type="text" id="pageInfo" placeholder="e.g., pp. 125-145, Introduction to Normal Forms">
+                        <div class="field-description">Page number(s) and subtitle (if applicable)</div>
+                    </div>
+                    
+                    <!-- Column M: COS Section, Lesson, Unit, Microunit -->
+                    <div class="field-group">
+                        <label>COS Section, Lesson, Unit, Microunit (Column M)</label>
+                        <input type="text" id="cosSection" placeholder="e.g., Unit 3, Module 2, Lesson 3.1">
+                        <div class="field-description">Location in the course of study or PA</div>
+                    </div>
+                </div>`;
+            }
+            
+            html += `
+                <div class="section-title">Extended Metadata (Columns N-AK)</div>
+                
+                <!-- Column N: RESOURCE URL -->
+                <div class="field-group">
+                    <label>RESOURCE URL (Column N) ${config.requiresResourceUrl ? '<span class="required">*</span>' : ''}</label>
+                    <input type="url" id="resourceUrl" placeholder="https://example.com/${config.assetType.toLowerCase().replace(' ', '_')}" 
+                           ${config.requiresResourceUrl ? 'required' : ''}>
+                    <div class="field-description">
+                        Direct link to the resource<br>
+                        • Please do not enter LRPS links into the DAMS
+                    </div>
+                </div>
+                
+                <!-- Column O: DESCRIPTION -->
+                <div class="field-group">
+                    <label>DESCRIPTION (Column O)</label>
+                    <textarea id="description" placeholder="Enter a narrative description of the content"></textarea>
+                    <div class="field-description">
+                        A free-text narrative describing the content<br>
+                        • Use complete sentences<br>
+                        • Avoid special characters
+                    </div>
+                </div>`;
+            
+            // Column P: CLOSED CAPTIONING (for video)
+            if (config.hasClosedCaptioning) {
+                html += `
+                <!-- Column P: CLOSED CAPTIONING -->
+                <div class="field-group">
+                    <label>CLOSED CAPTIONING (Column P)</label>
+                    <select id="closedCaptioning">
+                        <option value="">Select option</option>
+                        <option value="Available">Available</option>
+                        <option value="Not Available">Not Available</option>
+                        <option value="Auto-Generated">Auto-Generated</option>
+                        <option value="Professional">Professional</option>
+                        <option value="In Progress">In Progress</option>
+                    </select>
+                    <div class="field-description">Text that can be turned on/off for auditory content access</div>
+                </div>`;
+            }
+            
+            // For audio, add transcript field instead
+            if (config.hasTranscript) {
+                html += `
+                <!-- Column P: TRANSCRIPT (for audio) -->
+                <div class="field-group">
+                    <label>TRANSCRIPT AVAILABLE (Column P)</label>
+                    <select id="transcriptAvailable">
+                        <option value="">Select option</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="In Progress">In Progress</option>
+                    </select>
+                    <div class="field-description">Availability of text transcript for audio content</div>
+                </div>`;
+            }
+            
+            // Column Q: ALT TEXT (mainly for images)
+            html += `
+                <!-- Column Q: ALT TEXT -->
+                <div class="field-group">
+                    <label>ALT TEXT (Column Q) ${config.requiresAltText ? '<span class="required">*</span>' : ''}</label>
+                    <input type="text" id="altText" maxlength="125" 
+                           ${config.requiresAltText ? 'required' : ''}
+                           placeholder="${config.requiresAltText ? 'Brief description for screen readers' : 'Optional alt text'}">
+                    <div class="char-counter"><span id="altTextCount">0</span> / 125 characters</div>
+                    <div class="field-description">
+                        Alternative text for screen readers<br>
+                        • 125 character limit<br>
+                        • Complete sentences<br>
+                        ${config.requiresAltText ? '• Do NOT use "Image of..." or "Picture of..."<br>• Must differ from title and description<br>• Avoid gender/ethnicity/age unless relevant' : '• Optional for non-image assets'}
+                    </div>
+                </div>
+                
+                <!-- Column R: ACCESSIBILITY LONG DESCRIPTION -->
+                <div class="field-group">
+                    <label>ACCESSIBILITY LONG DESCRIPTION (Column R)</label>
+                    <textarea id="accessibilityLongDesc" 
+                              placeholder="${config.assetType === 'Image' ? 'Detailed description for complex images (graphs, infographics, etc.)' : 'Detailed description for accessibility'}"></textarea>
+                    <div class="field-description">
+                        ${config.assetType === 'Image' ? 'For COMPLEX images only (graphs, infographics, etc.)' : 'Detailed description for accessibility'}<br>
+                        • Describe how asset relates to course<br>
+                        ${config.assetType === 'Image' ? '• Do NOT use "Image of..." or "Picture of..."<br>' : ''}
+                        • Must differ from title, description, and alt text
+                    </div>
+                </div>
+                
+                <!-- Column S: LANGUAGE -->
+                <div class="field-group">
+                    <label>LANGUAGE (Column S) <span class="required">*</span></label>
+                    <select id="language" required>
+                        <option value="eng" selected>eng - English</option>
+                        <option value="spa">spa - Spanish</option>
+                        <option value="fra">fra - French</option>
+                        <option value="ita">ita - Italian</option>
+                        <option value="por">por - Portuguese</option>
+                        <option value="deu">deu - German</option>
+                        <option value="zxx">zxx - No language</option>
+                    </select>
+                    <div class="field-description">Primary language of the asset</div>
+                </div>
+                
+                <!-- Column T: TAGS -->
+                <div class="field-group">
+                    <label>TAGS (Column T) <span class="required">*</span></label>
+                    <input type="text" id="tags" required 
+                           placeholder="tag1, tag2, tag3, tag4, tag5">
+                    <div class="field-description">
+                        At least 5 tags for discovery (comma + space separated)<br>
+                        • Higher level concepts (e.g., imperialism, chemistry)<br>
+                        • Include gender/ethnicity/age info here if relevant<br>
+                        • Use singular form<br>
+                        • No trailing space
+                    </div>
+                </div>
+                
+                <!-- Column U: PUBLISHER -->
+                <div class="field-group">
+                    <label>PUBLISHER (Column U)</label>
+                    <select id="publisher">
+                        <option value="">Select Publisher</option>
+                        <option value="WGU">WGU</option>
+                        ${getPublisherOptions(config.assetType)}
+                    </select>
+                    <div class="field-description">
+                        Entity responsible for making the asset available<br>
+                        ${config.hasTextbookFields ? '• For VitalSource textbooks, choose VitalSource and enter textbook company in RIGHTS HOLDER' : ''}
+                    </div>
+                </div>
+                
+                <!-- Column W: RIGHTS TYPE -->
+                <div class="field-group">
+                    <label>RIGHTS TYPE (Column W)</label>
+                    <select id="rightsType">
+                        <option value="">Select Rights Type</option>
+                        <option value="Copyright">Copyright</option>
+                        <option value="Creative Commons">Creative Commons</option>
+                        <option value="Public Domain">Public Domain</option>
+                        <option value="Fair Use">Fair Use</option>
+                        <option value="Licensed">Licensed</option>
+                        <option value="Royalty Free">Royalty Free</option>
+                        <option value="Rights Managed">Rights Managed</option>
+                        <option value="Educational Use">Educational Use</option>
+                    </select>
+                    <div class="field-description">Overarching categories of rights held on an asset</div>
+                </div>
+                
+                <!-- Column X: RIGHTS HOLDER -->
+                <div class="field-group">
+                    <label>RIGHTS HOLDER (Column X)</label>
+                    <input type="text" id="rightsHolder" 
+                           placeholder="Person or organization (e.g., National Aeronautics and Space Administration (NASA))">
+                    <div class="field-description">
+                        Person or organization owning rights<br>
+                        • Include full name with acronym in parentheses if applicable
+                    </div>
+                </div>
+                
+                <!-- Column Y: LICENSE TYPE -->
+                <div class="field-group">
+                    <label>LICENSE TYPE (Column Y)</label>
+                    <select id="licenseType">
+                        <option value="">Select License Type</option>
+                        <option value="Standard License">Standard License</option>
+                        <option value="Extended License">Extended License</option>
+                        <option value="Editorial License">Editorial License</option>
+                        <option value="Commercial License">Commercial License</option>
+                        <option value="Educational License">Educational License</option>
+                        <option value="Creative Commons">Creative Commons</option>
+                        <option value="Public Domain">Public Domain</option>
+                    </select>
+                    <div class="field-description">Legal permission to use the asset</div>
+                </div>
+                
+                <!-- Column Z: CREATIVE COMMONS LICENSE TYPE -->
+                <div class="field-group">
+                    <label>CREATIVE COMMONS LICENSE TYPE (Column Z)</label>
+                    <select id="ccLicenseType">
+                        <option value="">Select if Creative Commons</option>
+                        <option value="CC0">CC0 - Public Domain</option>
+                        <option value="CC BY">CC BY - Attribution</option>
+                        <option value="CC BY-SA">CC BY-SA - Attribution-ShareAlike</option>
+                        <option value="CC BY-ND">CC BY-ND - Attribution-NoDerivs</option>
+                        <option value="CC BY-NC">CC BY-NC - Attribution-NonCommercial</option>
+                        <option value="CC BY-NC-SA">CC BY-NC-SA - Attribution-NonCommercial-ShareAlike</option>
+                        <option value="CC BY-NC-ND">CC BY-NC-ND - Attribution-NonCommercial-NoDerivs</option>
+                    </select>
+                    <div class="field-description">Specific Creative Commons license (if applicable)</div>
+                </div>
+                
+                <!-- Column AA: EFFECTIVE DATE -->
+                <div class="field-group">
+                    <label>EFFECTIVE DATE (Column AA)</label>
+                    <input type="date" id="effectiveDate">
+                    <div class="field-description">Copyright date or first date WGU can use asset (MM/DD/YYYY)</div>
+                </div>
+                
+                <!-- Column AB: EXPIRATION DATE -->
+                <div class="field-group">
+                    <label>EXPIRATION DATE (Column AB)</label>
+                    <input type="date" id="expirationDate">
+                    <div class="field-description">Last date WGU is allowed to use asset (MM/DD/YYYY)</div>
+                </div>
+                
+                <!-- Column AD: ORIGINAL TITLE -->
+                <div class="field-group">
+                    <label>ORIGINAL TITLE (Column AD)</label>
+                    <input type="text" id="originalTitle" 
+                           placeholder="Copy exactly as it appears from source (don't correct errors)">
+                    <div class="field-description">
+                        Original title from source<br>
+                        • Copy and paste exactly - do not correct spelling or punctuation
+                    </div>
+                </div>
+                
+                <!-- Column AE: ORIGINAL TITLE URL -->
+                <div class="field-group">
+                    <label>ORIGINAL TITLE URL (Column AE)</label>
+                    <input type="url" id="originalTitleUrl" 
+                           placeholder="https://example.com/original-source">
+                    <div class="field-description">Direct link to original asset source</div>
+                </div>
+                
+                <!-- Column AF: ORIGINAL CREATOR -->
+                <div class="field-group">
+                    <label>ORIGINAL CREATOR (Column AF)</label>
+                    <input type="text" id="originalCreator" 
+                           placeholder="Copy from original resource">
+                    <div class="field-description">Original creator of the asset</div>
+                </div>
+                
+                <!-- Column AG: ORIGINAL CREATOR URL -->
+                <div class="field-group">
+                    <label>ORIGINAL CREATOR URL (Column AG)</label>
+                    <input type="url" id="originalCreatorUrl" 
+                           placeholder="https://creator-website.com">
+                    <div class="field-description">Direct link to original creator's website</div>
+                </div>
+                
+                <!-- Column AH: GETTY COLLECTION -->
+                <div class="field-group">
+                    <label>GETTY COLLECTION (Column AH)</label>
+                    <input type="text" id="gettyCollection" 
+                           placeholder="If from Getty, copy from DETAILS section">
+                    <div class="field-description">Found in DETAILS of Getty asset (if applicable)</div>
+                </div>
+                
+                <!-- Column AI: LICENSE URL -->
+                <div class="field-group">
+                    <label>LICENSE URL (Column AI)</label>
+                    <input type="url" id="licenseUrl" 
+                           placeholder="https://example.com/license">
+                    <div class="field-description">Web address linking directly to the license</div>
+                </div>
+                
+                <!-- Column AJ: REFERENCE -->
+                <div class="field-group">
+                    <label>REFERENCE (Column AJ)</label>
+                    <textarea id="reference" 
+                              placeholder="APA format reference. Use [[url|text]] for links"></textarea>
+                    <div class="field-description">
+                        Source information in APA format<br>
+                        • Use [[url|text]] format for links within reference
+                    </div>
+                </div>
+                
+                <!-- Column AK: ATTRIBUTION -->
+                <div class="field-group">
+                    <label>ATTRIBUTION (Column AK)</label>
+                    <textarea id="attribution" 
+                              placeholder="Attribution statement. Use [[url|text]] for links"></textarea>
+                    <div class="field-description">
+                        Attribution for Creative Commons assets<br>
+                        • Use [[url|text]] format for links within attribution
+                    </div>
+                </div>`;
+            
+            return html;
+        }
+
+        function getFileExtension(assetType) {
+            const extensions = {
+                'Image': 'jpg',
+                'Video Link': 'mp4',
+                'Audio Link': 'mp3',
+                'Text File': 'pdf',
+                'Text Link': 'html',
+                'Textbook': 'pdf',
+                'Chapter': 'pdf',
+                'Page': 'pdf'
+            };
+            return extensions[assetType] || 'file';
+        }
+
+        function getPublisherOptions(assetType) {
+            const publishers = {
+                'Image': `
+                    <option value="Getty Images">Getty Images</option>
+                    <option value="Shutterstock">Shutterstock</option>
+                    <option value="Adobe Stock">Adobe Stock</option>
+                    <option value="Unsplash">Unsplash</option>
+                    <option value="Pexels">Pexels</option>
+                    <option value="Pixabay">Pixabay</option>`,
+                'Video Link': `
+                    <option value="YouTube">YouTube</option>
+                    <option value="Vimeo">Vimeo</option>
+                    <option value="Khan Academy">Khan Academy</option>
+                    <option value="TED">TED</option>
+                    <option value="Coursera">Coursera</option>
+                    <option value="LinkedIn Learning">LinkedIn Learning</option>`,
+                'Audio Link': `
+                    <option value="Spotify">Spotify</option>
+                    <option value="Apple Podcasts">Apple Podcasts</option>
+                    <option value="SoundCloud">SoundCloud</option>
+                    <option value="Audible">Audible</option>
+                    <option value="NPR">NPR</option>`,
+                'Text File': `
+                    <option value="Academic Publisher">Academic Publisher</option>
+                    <option value="Research Database">Research Database</option>
+                    <option value="Government Agency">Government Agency</option>`,
+                'Text Link': `
+                    <option value="Wikipedia">Wikipedia</option>
+                    <option value="Academic Journal">Academic Journal</option>
+                    <option value="News Organization">News Organization</option>
+                    <option value="Government Website">Government Website</option>`,
+                'Textbook': `
+                    <option value="VitalSource">VitalSource</option>
+                    <option value="Pearson">Pearson</option>
+                    <option value="McGraw-Hill">McGraw-Hill</option>
+                    <option value="Cengage">Cengage</option>
+                    <option value="Wiley">Wiley</option>
+                    <option value="Elsevier">Elsevier</option>`,
+                'Chapter': `
+                    <option value="VitalSource">VitalSource</option>
+                    <option value="Pearson">Pearson</option>
+                    <option value="McGraw-Hill">McGraw-Hill</option>
+                    <option value="Cengage">Cengage</option>`,
+                'Page': `
+                    <option value="VitalSource">VitalSource</option>
+                    <option value="Pearson">Pearson</option>
+                    <option value="McGraw-Hill">McGraw-Hill</option>
+                    <option value="Cengage">Cengage</option>`
+            };
+            
+            return (publishers[assetType] || '') + '<option value="Other">Other</option>';
+        }
+
+        function switchAssetType(type) {
+            currentAssetType = type;
+            
+            // Update button states
+            document.querySelectorAll('.asset-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Generate and display the appropriate form
+            const config = assetConfigs[type];
+            document.getElementById('assetForm').innerHTML = generateFormHTML(config);
+            
+            // Set up event listeners for the new form
+            setupFormListeners();
+            
+            // Hide output section when switching
+            document.getElementById('outputSection').classList.remove('active');
+            
+            // Load auto-saved data if available
+            loadAutoSave();
+        }
+
+        function setupFormListeners() {
+            // Update file name without extension
+            const fileNameInput = document.getElementById('fileName');
+            if (fileNameInput) {
+                fileNameInput.addEventListener('input', updateFileNameWithoutExt);
+            }
+            
+            // Character counter for ALT TEXT
+            const altTextInput = document.getElementById('altText');
+            if (altTextInput) {
+                altTextInput.addEventListener('input', function() {
+                    document.getElementById('altTextCount').textContent = this.value.length;
+                });
+            }
+            
+            // Auto-save on input
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                element.addEventListener('input', autoSave);
+                element.addEventListener('change', autoSave);
+            });
+        }
+
+        function updateFileNameWithoutExt() {
+            const fileNameInput = document.getElementById('fileName');
+            const fileNameNoExtInput = document.getElementById('fileNameNoExt');
+            
+            if (fileNameInput && fileNameNoExtInput) {
+                const fileName = fileNameInput.value;
+                const lastDotIndex = fileName.lastIndexOf('.');
+                
+                if (lastDotIndex > 0) {
+                    fileNameNoExtInput.value = fileName.substring(0, lastDotIndex);
+                } else {
+                    fileNameNoExtInput.value = fileName;
+                }
+            }
+        }
+
+        function clearForm() {
+            document.querySelectorAll('#assetForm input:not([readonly]), #assetForm select:not([readonly]), #assetForm textarea').forEach(field => {
+                if (!field.id.includes('assetType')) {
+                    field.value = '';
+                }
+            });
+            
+            // Reset character counter
+            const altTextCount = document.getElementById('altTextCount');
+            if (altTextCount) {
+                altTextCount.textContent = '0';
+            }
+            
+            document.getElementById('outputSection').classList.remove('active');
+        }
+
+        function validateAndSave() {
+            const config = assetConfigs[currentAssetType];
+            const errors = [];
+            
+            // Validate required fields
+            const requiredFields = {
+                'assetType': 'ASSET TYPE',
+                'type': 'TYPE',
+                'fileName': 'FILE NAME',
+                'title': 'TITLE',
+                'language': 'LANGUAGE',
+                'tags': 'TAGS'
+            };
+            
+            // Add conditional required fields
+            if (config.requiresAltText) {
+                requiredFields['altText'] = 'ALT TEXT';
+            }
+            
+            if (config.requiresResourceUrl) {
+                requiredFields['resourceUrl'] = 'RESOURCE URL';
+            }
+            
+            for (const [field, label] of Object.entries(requiredFields)) {
+                const element = document.getElementById(field);
+                if (element && (!element.value || element.value.trim() === '')) {
+                    errors.push(`${label} is required`);
+                }
+            }
+            
+            // Validate FILE NAME format
+            const fileName = document.getElementById('fileName').value;
+            if (fileName && !/^[a-zA-Z0-9_\-]+\.[a-zA-Z0-9]+$/.test(fileName)) {
+                errors.push('FILE NAME must not contain spaces or special characters (except - and _)');
+            }
+            
+            // Validate TAGS (at least 5)
+            const tags = document.getElementById('tags').value;
+            if (tags) {
+                const tagArray = tags.split(',').map(t => t.trim()).filter(t => t);
+                if (tagArray.length < 5) {
+                    errors.push('At least 5 TAGS are required');
+                }
+            }
+            
+            // Validate ALT TEXT length
+            const altText = document.getElementById('altText');
+            if (altText && altText.value && altText.value.length > 125) {
+                errors.push('ALT TEXT must be 125 characters or less');
+            }
+            
+            if (errors.length > 0) {
+                alert('Validation Errors:\n\n' + errors.join('\n'));
+                return;
+            }
+            
+            // If validation passes, save the data
+            const data = collectFormData();
+            savedEntries.push(data);
+            alert('Entry saved successfully! Total entries: ' + savedEntries.length);
+            
+            if (confirm('Would you like to clear the form for a new entry?')) {
+                clearForm();
+            }
+        }
+
+        function collectFormData() {
+            const config = assetConfigs[currentAssetType];
+            const fields = [
+                'assetType', 'type', 'avsupportfileType', 'fileName', 'fileNameNoExt', 'title',
+                'chapterInfo', 'pageInfo', 'cosSection', // Textbook fields
+                'resourceUrl', 'description', 'closedCaptioning', 'transcriptAvailable',
+                'altText', 'accessibilityLongDesc', 'language', 'tags', 'publisher',
+                'rightsType', 'rightsHolder', 'licenseType', 'ccLicenseType',
+                'effectiveDate', 'expirationDate', 'originalTitle', 'originalTitleUrl',
+                'originalCreator', 'originalCreatorUrl', 'gettyCollection',
+                'licenseUrl', 'reference', 'attribution'
+            ];
+            
+            const data = {};
+            fields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    data[field] = element.value || '';
+                } else {
+                    data[field] = '';
+                }
+            });
+            
+            return data;
+        }
+
+        function exportData() {
+            const data = collectFormData();
+            const config = assetConfigs[currentAssetType];
+            
+            // Create tab-separated values matching the spreadsheet column order
+            const rowData = [
+                // Columns E-J
+                data.assetType,
+                data.type,
+                data.avsupportfileType || '',
+                data.fileName,
+                data.fileNameNoExt,
+                data.title,
+                // Columns K-M (textbook fields or empty)
+                data.chapterInfo || '',
+                data.pageInfo || '',
+                data.cosSection || '',
+                // Columns N-AK
+                data.resourceUrl,
+                data.description,
+                data.closedCaptioning || data.transcriptAvailable || '',
+                data.altText,
+                data.accessibilityLongDesc,
+                data.language,
+                data.tags,
+                data.publisher,
+                '', // PublisherFormatted (Column V - auto-generated)
+                data.rightsType,
+                data.rightsHolder,
+                data.licenseType,
+                data.ccLicenseType,
+                data.effectiveDate,
+                data.expirationDate,
+                '', // LICENSE FILE (Column AC - not in form)
+                data.originalTitle,
+                data.originalTitleUrl,
+                data.originalCreator,
+                data.originalCreatorUrl,
+                data.gettyCollection,
+                data.licenseUrl,
+                data.reference,
+                data.attribution
+            ];
+            
+            const tsvData = rowData.join('\t');
+            
+            // Display the data
+            document.getElementById('outputData').textContent = tsvData;
+            document.getElementById('outputSection').classList.add('active');
+            
+            // Scroll to output
+            document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyToClipboard() {
+            const outputData = document.getElementById('outputData').textContent;
+            navigator.clipboard.writeText(outputData).then(() => {
+                alert('Data copied to clipboard!\n\nYou can now paste it directly into Excel starting at column E.');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                
+                // Fallback method
+                const textArea = document.createElement('textarea');
+                textArea.value = outputData;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                alert('Data copied to clipboard!\n\nYou can now paste it directly into Excel starting at column E.');
+            });
+        }
+
+        async function exportToExcel() {
+            if (!validateForm()) {
+                return;
+            }
+            
+            const data = collectFormData();
+            const config = assetConfigs[currentAssetType];
+            
+            try {
+                // Show loading message
+                const originalText = event.target.textContent;
+                event.target.textContent = 'Exporting...';
+                event.target.disabled = true;
+                
+                // Create the row data array
+                const rowData = [
+                    // Columns E-J
+                    data.assetType,
+                    data.type,
+                    data.avsupportfileType || '',
+                    data.fileName,
+                    data.fileNameNoExt,
+                    data.title,
+                    // Columns K-M (textbook fields or empty)
+                    data.chapterInfo || '',
+                    data.pageInfo || '',
+                    data.cosSection || '',
+                    // Columns N-AK
+                    data.resourceUrl,
+                    data.description,
+                    data.closedCaptioning || data.transcriptAvailable || '',
+                    data.altText,
+                    data.accessibilityLongDesc,
+                    data.language,
+                    data.tags,
+                    data.publisher,
+                    '', // PublisherFormatted (Column V - auto-generated)
+                    data.rightsType,
+                    data.rightsHolder,
+                    data.licenseType,
+                    data.ccLicenseType,
+                    data.effectiveDate,
+                    data.expirationDate,
+                    '', // LICENSE FILE (Column AC - not in form)
+                    data.originalTitle,
+                    data.originalTitleUrl,
+                    data.originalCreator,
+                    data.originalCreatorUrl,
+                    data.gettyCollection,
+                    data.licenseUrl,
+                    data.reference,
+                    data.attribution
+                ];
+                
+                // Call PowerShell script to write to Excel
+                const result = await writeToExcel(rowData);
+                
+                if (result.success) {
+                    alert(`Success! Data has been added to the Excel file.\nRow: ${result.row}\nFile: I:\\WGU-Active\\Performance Eval Info\\DAMS & LRPS Asset Tracker.xlsm`);
+                    
+                    // Ask if user wants to clear form
+                    if (confirm('Would you like to clear the form for a new entry?')) {
+                        clearForm();
+                    }
+                } else {
+                    alert(`Error writing to Excel: ${result.error}\n\nPlease try the 'Export to Clipboard' option instead.`);
+                }
+                
+            } catch (error) {
+                console.error('Export error:', error);
+                alert(`Export failed: ${error.message}\n\nPlease try the 'Export to Clipboard' option instead.`);
+            } finally {
+                // Restore button
+                event.target.textContent = originalText;
+                event.target.disabled = false;
+            }
+        }
+        
+        function validateForm() {
+            const config = assetConfigs[currentAssetType];
+            const errors = [];
+            
+            // Validate required fields
+            const requiredFields = {
+                'assetType': 'ASSET TYPE',
+                'type': 'TYPE',
+                'fileName': 'FILE NAME',
+                'title': 'TITLE',
+                'language': 'LANGUAGE',
+                'tags': 'TAGS'
+            };
+            
+            // Add conditional required fields
+            if (config.requiresAltText) {
+                requiredFields['altText'] = 'ALT TEXT';
+            }
+            
+            if (config.requiresResourceUrl) {
+                requiredFields['resourceUrl'] = 'RESOURCE URL';
+            }
+            
+            for (const [field, label] of Object.entries(requiredFields)) {
+                const element = document.getElementById(field);
+                if (element && (!element.value || element.value.trim() === '')) {
+                    errors.push(`${label} is required`);
+                }
+            }
+            
+            // Validate FILE NAME format
+            const fileName = document.getElementById('fileName').value;
+            if (fileName && !/^[a-zA-Z0-9_\-]+\.[a-zA-Z0-9]+$/.test(fileName)) {
+                errors.push('FILE NAME must not contain spaces or special characters (except - and _)');
+            }
+            
+            // Validate TAGS (at least 5)
+            const tags = document.getElementById('tags').value;
+            if (tags) {
+                const tagArray = tags.split(',').map(t => t.trim()).filter(t => t);
+                if (tagArray.length < 5) {
+                    errors.push('At least 5 TAGS are required');
+                }
+            }
+            
+            // Validate ALT TEXT length
+            const altText = document.getElementById('altText');
+            if (altText && altText.value && altText.value.length > 125) {
+                errors.push('ALT TEXT must be 125 characters or less');
+            }
+            
+            if (errors.length > 0) {
+                alert('Validation Errors:\n\n' + errors.join('\n'));
+                return false;
+            }
+            
+            return true;
+        }
+        
+        async function writeToExcel(rowData) {
+            return new Promise((resolve, reject) => {
+                // Create a temporary PowerShell script to write to Excel
+                const powershellScript = `
+                $excelPath = "I:\\WGU-Active\\Performance Eval Info\\DAMS & LRPS Asset Tracker.xlsm"
+                $sheetName = "DAMS Asset Metadata"
+                
+                try {
+                    # Create Excel COM object
+                    $excel = New-Object -ComObject Excel.Application
+                    $excel.Visible = $false
+                    $excel.DisplayAlerts = $false
+                    
+                    # Open the workbook
+                    $workbook = $excel.Workbooks.Open($excelPath)
+                    $sheet = $workbook.Sheets.Item($sheetName)
+                    
+                    # Find the next empty row (starting from row 3, as rows 1-2 have headers)
+                    $row = 3
+                    while ($sheet.Cells.Item($row, 5).Value -ne $null) {
+                        $row++
+                    }
+                    
+                    # Data array from JavaScript (will be replaced)
+                    $data = @(${JSON.stringify(rowData).replace(/"/g, '""')})
+                    
+                    # Write data starting from column E (5)
+                    $col = 5
+                    foreach ($value in $data) {
+                        $sheet.Cells.Item($row, $col).Value = $value
+                        $col++
+                    }
+                    
+                    # Save the workbook
+                    $workbook.Save()
+                    
+                    # Close Excel
+                    $workbook.Close($false)
+                    $excel.Quit()
+                    
+                    # Release COM objects
+                    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($sheet) | Out-Null
+                    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($workbook) | Out-Null
+                    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($excel) | Out-Null
+                    [System.GC]::Collect()
+                    [System.GC]::WaitForPendingFinalizers()
+                    
+                    Write-Output "SUCCESS:$row"
+                    
+                } catch {
+                    Write-Output "ERROR:$($_.Exception.Message)"
+                }
+                `;
+                
+                // For security reasons, browser cannot directly execute PowerShell
+                // Instead, we'll provide instructions to the user
+                resolve({
+                    success: false,
+                    error: 'Direct Excel writing requires running this form in a desktop application or using a server-side component. Please use the \'Export to Clipboard\' feature instead.'
+                });
+            });
+        }
+
+        // Auto-save to localStorage
+        function autoSave() {
+            const data = collectFormData();
+            localStorage.setItem('dams_form_complete_' + currentAssetType, JSON.stringify(data));
+        }
+
+        // Load from localStorage
+        function loadAutoSave() {
+            const saved = localStorage.getItem('dams_form_complete_' + currentAssetType);
+            
+            if (saved) {
+                const data = JSON.parse(saved);
+                Object.keys(data).forEach(field => {
+                    const element = document.getElementById(field);
+                    if (element && !element.readOnly && !element.id.includes('assetType')) {
+                        element.value = data[field];
+                    }
+                });
+                
+                // Update character counter
+                const altText = document.getElementById('altText');
+                if (altText && data.altText) {
+                    const counter = document.getElementById('altTextCount');
+                    if (counter) {
+                        counter.textContent = data.altText.length;
+                    }
+                }
+            }
+        }
+
+        function generatePowerShellScript() {
+            const data = collectFormData();
+            
+            const rowData = [
+                // Columns E-J
+                data.assetType,
+                data.type,
+                data.avsupportfileType || '',
+                data.fileName,
+                data.fileNameNoExt,
+                data.title,
+                // Columns K-M (textbook fields or empty)
+                data.chapterInfo || '',
+                data.pageInfo || '',
+                data.cosSection || '',
+                // Columns N-AK
+                data.resourceUrl,
+                data.description,
+                data.closedCaptioning || data.transcriptAvailable || '',
+                data.altText,
+                data.accessibilityLongDesc,
+                data.language,
+                data.tags,
+                data.publisher,
+                '', // PublisherFormatted
+                data.rightsType,
+                data.rightsHolder,
+                data.licenseType,
+                data.ccLicenseType,
+                data.effectiveDate,
+                data.expirationDate,
+                '', // LICENSE FILE
+                data.originalTitle,
+                data.originalTitleUrl,
+                data.originalCreator,
+                data.originalCreatorUrl,
+                data.gettyCollection,
+                data.licenseUrl,
+                data.reference,
+                data.attribution
+            ];
+            
+            // Escape quotes in data
+            const escapedData = rowData.map(item => {
+                if (typeof item === 'string') {
+                    return '"' + item.replace(/"/g, '""') + '"';
+                }
+                return '"' + String(item) + '"';
+            }).join(', ');
+            
+            return `# PowerShell script to export DAMS data to Excel
+# Save as 'export-to-excel.ps1' and run in PowerShell
+
+$excelPath = "I:\\WGU-Active\\Performance Eval Info\\DAMS & LRPS Asset Tracker.xlsm"
+$sheetName = "DAMS Asset Metadata"
+
+try {
+    Write-Host "Opening Excel file..."
+    
+    # Create Excel COM object
+    $excel = New-Object -ComObject Excel.Application
+    $excel.Visible = $false
+    $excel.DisplayAlerts = $false
+    
+    # Open the workbook
+    $workbook = $excel.Workbooks.Open($excelPath)
+    $sheet = $workbook.Sheets.Item($sheetName)
+    
+    # Find the next empty row (starting from row 3, as rows 1-2 have headers)
+    $row = 3
+    while ($sheet.Cells.Item($row, 5).Value -ne $null) {
+        $row++
+    }
+    
+    Write-Host "Writing to row: $row"
+    
+    # Data array
+    $data = @(${escapedData})
+    
+    # Write data starting from column E (5)
+    $col = 5
+    foreach ($value in $data) {
+        $sheet.Cells.Item($row, $col).Value = $value
+        $col++
+    }
+    
+    Write-Host "Saving workbook..."
+    
+    # Save the workbook
+    $workbook.Save()
+    
+    # Close Excel
+    $workbook.Close($false)
+    $excel.Quit()
+    
+    # Release COM objects
+    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($sheet) | Out-Null
+    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($workbook) | Out-Null
+    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($excel) | Out-Null
+    [System.GC]::Collect()
+    [System.GC]::WaitForPendingFinalizers()
+    
+    Write-Host "SUCCESS: Data exported to row $row" -ForegroundColor Green
+    
+} catch {
+    Write-Host "ERROR: $($_.Exception.Message)" -ForegroundColor Red
+    
+    # Clean up on error
+    if ($workbook) {
+        $workbook.Close($false)
+    }
+    if ($excel) {
+        $excel.Quit()
+    }
+}
+
+Write-Host "Press any key to continue..."
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")`;
+        }
+        
+        function showPowerShellScript() {
+            if (!validateForm()) {
+                return;
+            }
+            
+            const script = generatePowerShellScript();
+            document.getElementById('powershellScript').textContent = script;
+            document.getElementById('powershellSection').style.display = 'block';
+            document.getElementById('powershellSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function copyPowerShellScript() {
+            const script = document.getElementById('powershellScript').textContent;
+            navigator.clipboard.writeText(script).then(() => {
+                alert('PowerShell script copied to clipboard!\n\n1. Save as export-to-excel.ps1\n2. Run in PowerShell\n3. The script will add your data to the Excel file');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy script. Please select and copy manually.');
+            });
+        }
+        
+        // Initialize the form on page load
+        window.addEventListener('load', () => {
+            switchAssetType('image');
+        });
+    </script>
+</body>
+</html>
